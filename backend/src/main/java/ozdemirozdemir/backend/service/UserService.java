@@ -10,6 +10,7 @@ import ozdemirozdemir.backend.repository.RoleRepository;
 import ozdemirozdemir.backend.repository.UserRepository;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -58,5 +59,18 @@ public class UserService {
     private String generateUsername(String name){
         long generatedNumber = (long) Math.floor(Math.random() * 1_000_000_000);
         return name + generatedNumber;
+    }
+
+    public Optional<ApplicationUser> findByUsername(String username) {
+        return this.userRepository.findByUsername(username);
+    }
+
+    public ApplicationUser updateUser(ApplicationUser user) {
+        try {
+            return this.userRepository.save(user);
+        }
+        catch (Exception e){
+            throw new EmailAlreadyTakenException(user.getEmail());
+        }
     }
 }
