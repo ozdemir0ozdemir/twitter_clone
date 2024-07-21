@@ -1,5 +1,6 @@
 package ozdemirozdemir.backend.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ozdemirozdemir.backend.models.ApplicationUser;
 import ozdemirozdemir.backend.models.Role;
@@ -9,17 +10,11 @@ import ozdemirozdemir.backend.repository.UserRepository;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
-
 
     public ApplicationUser registerUser(ApplicationUser user){
         Set<Role> roles = user.getAuthorities();
