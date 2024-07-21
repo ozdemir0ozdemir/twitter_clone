@@ -36,6 +36,12 @@ public class AuthenticationController {
         return userService.updateUser(user);
     }
 
+    @PostMapping("/email/code")
+    public ResponseEntity<String> createEmailVerification(@RequestParam("username") String username) {
+        this.userService.generateEmailVerification(username);
+        return ResponseEntity.ok().body("Verification code generated, email sent.");
+    }
+
     @ExceptionHandler({EmailAlreadyTakenException.class})
     public ResponseEntity<String> handleEmailTaken(EmailAlreadyTakenException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

@@ -1,6 +1,7 @@
 package ozdemirozdemir.backend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ozdemirozdemir.backend.dto.RegistrationData;
 import ozdemirozdemir.backend.exception.EmailAlreadyTakenException;
@@ -20,10 +21,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    public ApplicationUser registerUser(RegistrationData registrationData){
+    public ApplicationUser registerUser(RegistrationData registrationData) {
         Set<Role> roles = new HashSet<>();
-        roles.add(roleRepository.findByAuthority("USER")
-                .orElseThrow( () -> new IllegalStateException("Role USER does not exits!") ));
+        roles.add(
+                roleRepository
+                        .findByAuthority("USER")
+                        .orElse(this.roleRepository.save(new Role("USER")))
+        );
 
         ApplicationUser user = new ApplicationUser();
         user.setAuthorities(roles);
@@ -37,9 +41,9 @@ public class UserService {
         String tempName = "";
         boolean nameTaken = true;
 
-        do{
+        do {
             tempName = generateUsername(name);
-            if(userRepository.findByUsername(tempName).isEmpty()){
+            if (userRepository.findByUsername(tempName).isEmpty()) {
 
                 nameTaken = false;
             }
@@ -48,18 +52,13 @@ public class UserService {
 
         user.setUsername(tempName);
 
-        try{
+        try {
             return userRepository.save(user);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new EmailAlreadyTakenException(registrationData.email());
         }
     }
 
-    private String generateUsername(String name){
-        long generatedNumber = (long) Math.floor(Math.random() * 1_000_000_000);
-        return name + generatedNumber;
-    }
 
     public Optional<ApplicationUser> findByUsername(String username) {
         return this.userRepository.findByUsername(username);
@@ -68,9 +67,39 @@ public class UserService {
     public ApplicationUser updateUser(ApplicationUser user) {
         try {
             return this.userRepository.save(user);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new EmailAlreadyTakenException(user.getEmail());
         }
     }
+
+    public void generateEmailVerification(String username) {
+        ApplicationUser user = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found!"));
+
+        user.setVerification(generateVerificationNumber());
+        this.userRepository.save(user);
+    }
+
+    private String generateUsername(String name) {
+        long generatedNumber = (long) Math.floor(Math.random() * 1_000_000_000);
+        return name + generatedNumber;
+    }
+
+    private Long generateVerificationNumber() {
+        return (long) Math.floor(Math.random() * 100_000_000);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

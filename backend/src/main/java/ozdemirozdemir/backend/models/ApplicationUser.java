@@ -1,10 +1,10 @@
 package ozdemirozdemir.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.sql.Date;
 import java.util.HashSet;
@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class ApplicationUser {
 
     @Id
@@ -40,7 +41,6 @@ public class ApplicationUser {
     @Column(unique = true)
     private String username;
 
-    @JsonIgnore
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -50,24 +50,14 @@ public class ApplicationUser {
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Set<Role> authorities;
+    private Boolean enabled;
+
+    @Column(nullable = true)
+    private Long verification;
 
     public ApplicationUser() {
         this.authorities = new HashSet<>();
+        this.enabled = false;
     }
 
-
-    @Override
-    public String toString() {
-        return "ApplcationUser{" +
-                "userId=" + userId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", authorities=" + authorities +
-                '}';
-    }
 }
