@@ -20,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final MailService mailService;
 
     public ApplicationUser registerUser(RegistrationData registrationData) {
         Set<Role> roles = new HashSet<>();
@@ -77,6 +78,13 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found!"));
 
         user.setVerification(generateVerificationNumber());
+
+        mailService.sendEmail(
+                user.getEmail(),
+                "Your verification code",
+                "Here is your verification code: " + user.getVerification()
+        );
+
         this.userRepository.save(user);
     }
 

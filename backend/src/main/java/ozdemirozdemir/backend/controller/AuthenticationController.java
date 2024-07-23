@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ozdemirozdemir.backend.dto.RegistrationData;
 import ozdemirozdemir.backend.dto.UpdatePhoneData;
 import ozdemirozdemir.backend.exception.EmailAlreadyTakenException;
+import ozdemirozdemir.backend.exception.EmailFailedToSendException;
 import ozdemirozdemir.backend.models.ApplicationUser;
 import ozdemirozdemir.backend.service.UserService;
 
@@ -49,6 +50,11 @@ public class AuthenticationController {
 
     @ExceptionHandler({UsernameNotFoundException.class})
     public ResponseEntity<String> handleUsernameNotFound(UsernameNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler({EmailFailedToSendException.class})
+    public ResponseEntity<String> handleEmailFailedToSend(EmailFailedToSendException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 

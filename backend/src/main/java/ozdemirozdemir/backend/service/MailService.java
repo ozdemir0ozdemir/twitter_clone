@@ -2,14 +2,15 @@ package ozdemirozdemir.backend.service;
 
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ozdemirozdemir.backend.exception.EmailFailedToSendException;
 
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -21,7 +22,7 @@ public class MailService {
 
     private final Gmail gmail;
 
-    public void sendEmail(String to, String subject, String content) throws Exception {
+    public void sendEmail(String to, String subject, String content)  {
 
         Properties properties = new Properties();
 
