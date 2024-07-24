@@ -1,4 +1,7 @@
 HELP.md
+tokens/
+tokens/*
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -21,7 +24,6 @@ target/
 *.iml
 *.ipr
 
-tokens/
 
 
 ### NetBeans ###
