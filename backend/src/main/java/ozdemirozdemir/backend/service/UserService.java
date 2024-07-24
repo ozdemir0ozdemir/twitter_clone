@@ -2,9 +2,11 @@ package ozdemirozdemir.backend.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ozdemirozdemir.backend.dto.RegistrationData;
 import ozdemirozdemir.backend.exception.EmailAlreadyTakenException;
+import ozdemirozdemir.backend.exception.IncorrectVerificationCodeException;
 import ozdemirozdemir.backend.models.ApplicationUser;
 import ozdemirozdemir.backend.models.Role;
 import ozdemirozdemir.backend.repository.RoleRepository;
@@ -21,6 +23,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final MailService mailService;
+    private final PasswordEncoder passwordEncoder;
 
     public ApplicationUser registerUser(RegistrationData registrationData) {
         Set<Role> roles = new HashSet<>();
@@ -88,6 +91,21 @@ public class UserService {
         this.userRepository.save(user);
     }
 
+    public ApplicationUser verifyEmail(String username, Long code) {
+        ApplicationUser user = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found!"));
+
+        if(code.equals(user.getVerification())){
+            user.setEnabled(true);
+            user.setVerification(null);
+            return userRepository.save(user);
+        }
+
+        throw new IncorrectVerificationCodeException(username, code);
+
+
+    }
+
     private String generateUsername(String name) {
         long generatedNumber = (long) Math.floor(Math.random() * 1_000_000_000);
         return name + generatedNumber;
@@ -95,6 +113,18 @@ public class UserService {
 
     private Long generateVerificationNumber() {
         return (long) Math.floor(Math.random() * 100_000_000);
+    }
+
+
+    public ApplicationUser setPassword(String username, String password) {
+        ApplicationUser user = this.userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found!"));
+
+        String encodedPassword = passwordEncoder.encode(password);
+
+        user.setPassword(encodedPassword);
+
+        return userRepository.save(user);
     }
 }
 
