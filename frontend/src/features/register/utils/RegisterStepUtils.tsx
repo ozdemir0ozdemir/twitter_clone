@@ -19,3 +19,12 @@ export const displayIcon = (step: number):JSX.Element => {
             return <></>;
     }
 }
+
+export const iconClass = (step: number): string => {
+    if(step === 4 || step === 6) {
+        return "reg-step-counter-btn-disabled";
+    }
+    else {
+        return "reg-step-counter-btn";
+    }
+}
