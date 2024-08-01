@@ -1,12 +1,12 @@
 import React from "react";
 
-import './Home.css';
+import './Landing.css';
 import '../assets/global.css';
 import {RegisterModal} from "../features/register/components/RegisterModal/RegisterModal";
 
-export const Home:React.FC = () => {
+export const Landing:React.FC = () => {
     return (
-        <div className="home-container bg-color">
+        <div className="landing-container bg-color">
             <RegisterModal />
         </div>
     )
