@@ -8,7 +8,6 @@ export const Home:React.FC = () => {
     return (
         <div className="home-container bg-color">
             <RegisterModal />
-
         </div>
     )
 }
