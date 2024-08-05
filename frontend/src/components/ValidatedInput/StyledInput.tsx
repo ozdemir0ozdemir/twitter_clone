@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import {StyledInputProps} from '../../utils/GlobalInterfaces';
 import {determineLabelColor, determineStyledInputBorder} from "../../utils/DetermineStylesUtil";

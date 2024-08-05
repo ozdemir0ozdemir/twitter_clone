@@ -1,5 +1,6 @@
 import React from 'react';
 import TextInput from '../../../../components/TextInput/TextInput';
+import {ValidatedInput} from "../../../../components/ValidatedInput/ValidatedInput";
 
 import './RegisterFormOne.css';
 
@@ -31,20 +32,24 @@ export const RegisterFormOne: React.FC = () => {
     return (
         <div className="reg-step-one-container">
             <div className="reg-step-one-content">
-                <TextInput name="firstName"
-                           label="First Name:"
-                           errorMessage="Please enter your name..."
-                           onChange={updateUser} />
 
-                <TextInput name="lastName"
-                           label="Last Name:"
-                           errorMessage="Please enter your last name..."
-                           onChange={updateUser} />
+                <ValidatedInput name="firstName"
+                                label="First"
+                                errorMessage="What's your name?"
+                                validator={() => true}
+                                changeValue={updateUser} />
 
-                <TextInput name="email"
-                           label="Email:"
-                           errorMessage="Please enter a valid email..."
-                           onChange={updateUser} />
+                <ValidatedInput name="lastName"
+                                label="Last"
+                                errorMessage="What's your name?"
+                                validator={() => true}
+                                changeValue={updateUser} />
+
+                <ValidatedInput name="email"
+                                label="Email"
+                                errorMessage="Please enter a valid email."
+                                validator={() => true}
+                                changeValue={updateUser} />
             </div>
         </div>
     );
